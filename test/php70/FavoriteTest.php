@@ -81,6 +81,7 @@ class FavoriteTest extends DataDesignTest {
 	public function testInsertInvalidFavorite() {
 		// create a favorite without foreign keys and watch it fail
 		$favorite = new Favorite(null, null, null);
+		$favorite->insert($this->getPDO());
 	}
 
 	/**
