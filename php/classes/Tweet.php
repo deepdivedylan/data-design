@@ -380,7 +380,7 @@ class Tweet implements \JsonSerializable {
 	 **/
 	public static function getAllTweets(\PDO $pdo) : \SPLFixedArray {
 		// create query template
-		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate FROM tweet";
+		$query = "SELECT tweetId, tweetProfileId, tweetContent, tweetDate, profileAtHandle FROM tweet INNER JOIN profile ON tweet.tweetProfileId = profile.profileId WHERE profileAtHandle = profileAtHandle;";
 		$statement = $pdo->prepare($query);
 		$statement->execute();
 
@@ -390,7 +390,7 @@ class Tweet implements \JsonSerializable {
 		while(($row = $statement->fetch()) !== false) {
 			try {
 				$tweet = new Tweet($row["tweetId"], $row["tweetProfileId"], $row["tweetContent"], $row["tweetDate"]);
-				$tweets[$tweets->key()] = $tweet;
+				$tweets[$tweets->key()] = (object) ["tweet" => $tweet, "profileAtHandle" => $row["profileAtHandle"]];
 				$tweets->next();
 			} catch(\Exception $exception) {
 				// if the row couldn't be converted, rethrow it
