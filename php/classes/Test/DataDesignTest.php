@@ -8,7 +8,7 @@ use PHPUnit\DbUnit\Database\Connection;
 use PHPUnit\DbUnit\Operation\{Composite, Factory, Operation};
 
 // grab the encrypted properties file
-require_once("/etc/apache2/capstone-mysql/encrypted-config.php");
+require_once("/etc/apache2/capstone-mysql/Secret.php");
 
 require_once(dirname(__DIR__, 3) . "/vendor/autoload.php");
 
@@ -87,10 +87,10 @@ abstract class DataDesignTest extends TestCase {
 	public final function getConnection() : Connection {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
+			$secrets = new Secret();
 			// connect to mySQL and provide the interface to PHPUnit
-			$config = readConfig("/etc/apache2/capstone-mysql/ddctwitter.ini");
-			$pdo = connectToEncryptedMySQL("/etc/apache2/capstone-mysql/ddctwitter.ini");
-			$this->connection = $this->createDefaultDBConnection($pdo, $config["database"]);
+
+			$this->connection = $this->createDefaultDBConnection($secrets->getPdoObject("/etc/apache2/capstone-mysql.ini") , $secrets->getDatabaseName("/etc/apache2/capstone-mysql.ini"));
 		}
 		return($this->connection);
 	}
