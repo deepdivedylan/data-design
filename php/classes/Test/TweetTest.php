@@ -256,23 +256,21 @@ class TweetTest extends DataDesignTest {
 
 		// create a new Tweet and insert to into mySQL
 		$tweetId = generateUuidV4();
-		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE, $this->profile->getProfileAtHandle());
+		$tweet = new Tweet($tweetId, $this->profile->getProfileId(), $this->VALID_TWEETCONTENT, $this->VALID_TWEETDATE);
 		$tweet->insert($this->getPDO());
 
 		// grab the data from mySQL and enforce the fields match our expectations
 		$results = Tweet::getAllTweets($this->getPDO());
 		$this->assertEquals($numRows + 1, $this->getConnection()->getRowCount("tweet"));
 		$this->assertCount(1, $results);
-		$this->assertContainsOnlyInstancesOf("Edu\\Cnm\\DataDesign\\Tweet", $results);
 
 		// grab the result from the array and validate it
 		$pdoTweet = $results[0];
-		$pdoProfile = $results[0];
-		$this->assertEquals($pdoTweet->getTweetId(), $tweetId);
-		$this->assertEquals($pdoTweet->getTweetProfileId(), $this->profile->getProfileId());
-		$this->assertEquals($pdoTweet->getTweetContent(), $this->VALID_TWEETCONTENT);
-		$this->assertEquals($pdoProfile->getProfileAtHandle(), $this->profile->getProfileAtHandle());
+		$this->assertEquals($pdoTweet->tweet->getTweetId(), $tweetId);
+		$this->assertEquals($pdoTweet->tweet->getTweetProfileId(), $this->profile->getProfileId());
+		$this->assertEquals($pdoTweet->tweet->getTweetContent(), $this->VALID_TWEETCONTENT);
+		$this->assertEquals($pdoTweet->profileAtHandle, $this->profile->getProfileAtHandle());
 		//format the date too seconds since the beginning of time to avoid round off error
-		$this->assertEquals($pdoTweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
+		$this->assertEquals($pdoTweet->tweet->getTweetDate()->getTimestamp(), $this->VALID_TWEETDATE->getTimestamp());
 	}
 }

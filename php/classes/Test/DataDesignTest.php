@@ -87,10 +87,10 @@ abstract class DataDesignTest extends TestCase {
 	public final function getConnection() : Connection {
 		// if the connection hasn't been established, create it
 		if($this->connection === null) {
-			$secrets = new Secret();
+			$secrets = new \Secret();
 			// connect to mySQL and provide the interface to PHPUnit
 
-			$this->connection = $this->createDefaultDBConnection($secrets->getPdoObject("/etc/apache2/capstone-mysql.ini") , $secrets->getDatabaseName("/etc/apache2/capstone-mysql.ini"));
+			$this->connection = $this->createDefaultDBConnection($secrets->getPdoObject("/etc/apache2/capstone-mysql/ddctwitter.ini") , $secrets->getDatabaseName("/etc/apache2/capstone-mysql/ddctwitter.ini"));
 		}
 		return($this->connection);
 	}
